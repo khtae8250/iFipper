@@ -1,2 +1,2 @@
-# iFipper
-iFipper: Label Flipping for Individual Fairness
+# iFlipper
+iFlipper: Label Flipping for Individual Fairness
