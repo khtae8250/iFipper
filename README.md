@@ -9,4 +9,9 @@ As machine learning becomes prevalent, mitigating any unfairness present in the 
 
 We propose label flipping as a way to mitigate data bias for individual fairness and assume a binary classification setting where labels have 0 or 1 values. Given a training set of examples, the idea is to change the labels of some of the examples such that similar examples have the same labels as much as possible. We can use a graph representation to illustrate label flipping as shown in the above figure. Each node represents a training example, and it color indicates the label (black indicates label 1, and white indicates 0). Two similar nodes are connected with an edge, and a violation occurs when the edge is connected with two nodes with different labels. In the figure, there are four nodes where only the nodes 1, 2, and 3 are similar to each other. In addition, nodes 1 and 4 have label 1, and nodes 2 and 3 have label 0. We can see that there are two “violations” of fairness in this dataset: (1,2) and (1,3) because there are edges between them, and they have different colors. After flipping the label of node 1 from 1 to 0, we have no violations.
 
+## Label Flipping Optimization Problem
+
 ## iFlipper
+
+iFlipper converts the MIQP problem into an approximate linear program (LP) problem and produces a feasible solution with theoretical guarantees. The conversion is done in
+two steps: from MIQP to an equivalent integer linear program (ILP) using linear constraints and from the ILP problem to an approximate LP problem. iFlipper then solves the approximate LP problem and convert its optimal solution to another optimal solution that only has values in {0, 𝛼, 1} using the converting algorithm. iFlipper then applies adaptive rounding to ensure feasibility. Finally, iFlipper possibly improves the rounded solution by unflipping labels using using the reverse greedy algorithm.
