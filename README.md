@@ -15,7 +15,7 @@ One consequence of label flipping is an accuracy-fairness trade-off where the mo
 
 <p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png width="550"></p>
 
-y<sub>i</sub> and y'<sub>i</sub>
+y<sub>i</sub> and y<sup>'</sup><sub>i</sub>
 
 ## iFlipper
 
