@@ -11,6 +11,10 @@ We propose label flipping as a way to mitigate data bias for individual fairness
 
 ## Label Flipping Optimization Problem
 
+One consequence of label flipping is an accuracy-fairness trade-off where the model’s accuracy may diminish. As an extreme example, if we simply flip all the labels to be 0, then a trained model that only predicts 0 is certainly fair, but inaccurate to say the least. Even if we carefully flip the labels, we still observe a trade-off. We thus formulate the optimization problem where the objective is to minimize the number of label flipping while limiting the number of individual fairness violations to an allowed number m. The optimization can be formally stated as an instance of mixed-integer quadratic programming (MIQP) problem, which is NP-hard.
+
+<p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png></p>
+
 ## iFlipper
 
 iFlipper converts the MIQP problem into an approximate linear program (LP) problem and produces a feasible solution with theoretical guarantees. The conversion is done in
