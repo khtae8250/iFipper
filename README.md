@@ -15,6 +15,8 @@ One consequence of label flipping is an accuracy-fairness trade-off where the mo
 
 <p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png width="550"></p>
 
+y_i, y_j
+
 ## iFlipper
 
 iFlipper converts the MIQP problem into an approximate linear program (LP) problem and produces a feasible solution with theoretical guarantees. The conversion is done in
