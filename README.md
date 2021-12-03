@@ -15,7 +15,7 @@ One consequence of label flipping is an accuracy-fairness trade-off where the mo
 
 <p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png width="550"></p>
 
-y<sub>i</sub> and y<sub>i</sub>'
+where y<sub>i</sub> indicates an output label, and y<sub>i</sub>' is its original value. Intuitively, we count the number of flips ((y<sub>i</sub> − y<sub>i</sub>')<sup>2</sup> = 1) while ensuring that the number of violations ((y<sub>i</sub> − y<sub>j</sub>)<sup>2</sup> = 1 and W<sub>ij</sub> = 1) is within the limit m.
 
 ## iFlipper
 
