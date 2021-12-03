@@ -13,7 +13,7 @@ We propose label flipping as a way to mitigate data bias for individual fairness
 
 One consequence of label flipping is an accuracy-fairness trade-off where the model’s accuracy may diminish. As an extreme example, if we simply flip all the labels to be 0, then a trained model that only predicts 0 is certainly fair, but inaccurate to say the least. Even if we carefully flip the labels, we still observe a trade-off. We thus formulate the optimization problem where the objective is to minimize the number of label flipping while limiting the number of individual fairness violations to an allowed number m. Given a similarity matrix W (W<sub>ij</sub> = 1 if two nodes (x<sub>i</sub>, x<sub>j</sub>) are similar), the optimization can be formally stated as an instance of mixed-integer quadratic programming (MIQP) problem, and we prove that it is NP-hard.
 
-<p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png width="550"></p>
+<p align="center"><img src=https://user-images.githubusercontent.com/29707304/144567341-b0dc73a9-df37-402d-8cd8-db181df91b7d.png width="500"></p>
 
 where y<sub>i</sub> indicates an output label, and y<sub>i</sub>' is its original value. Intuitively, we count the number of flips ((y<sub>i</sub> − y<sub>i</sub>')<sup>2</sup> = 1) while ensuring that the number of violations ((y<sub>i</sub> − y<sub>j</sub>)<sup>2</sup> = 1 and W<sub>ij</sub> = 1) is within the limit m.
 
