@@ -7,6 +7,7 @@ import copy
 
 from utils import measure_violations
 from mosek_solver import MOSEK_Solver
+from iflipper_utils import init_cluster, get_zero_cluster, get_nonzero_two_clusters, transform_with_one_cluster, transform_with_two_clusters
 
 class iFlipper:
     def __init__(self, label, w_sim, edge):
@@ -35,13 +36,39 @@ class iFlipper:
         if measure_violations(self.label, self.edge) == m:
             flipped_label = self.label
         else:
-            opt_solution = MOSEK_Solver(self.label, m, self.edge)
-            rounded_label = self.adaptive_rounding(opt_solution, m, self.edge)
+            optimal_label = MOSEK_Solver(self.label, m, self.edge)
+            converted_label = self.optimal_converting(optimal_label, self.label, self.edge)
+            rounded_label = self.adaptive_rounding(converted_label, m, self.edge)
             flipped_label = self.reverse_greedy(self.label, rounded_label, m, self.w_sim, self.edge)
 
         return flipped_label
     
-    def adaptive_rounding(self, opt_solution, m, edge):
+    def optimal_converting(self, optimal_label, label, edge):
+
+        cluster_info, cluster_nodes, cluster_nodes_num = init_cluster(optimal_label, label, edge)
+        T = len(cluster_info.keys())
+
+        while T > 1:
+            while True:
+                alpha = get_zero_cluster(cluster_nodes_num)
+                if alpha == 0:
+                    break
+                else:
+                    cluster_info, cluster_nodes_num, cluster_nodes = transform_with_one_cluster(alpha, cluster_info, cluster_nodes_num, cluster_nodes)
+                    T = len(cluster_info.keys())
+            if T > 1:
+                alpha, beta = get_nonzero_two_clusters(cluster_info)
+                cluster_info, cluster_nodes_num, cluster_nodes = transform_with_two_clusters(alpha, beta, cluster_info, cluster_nodes_num, cluster_nodes)    
+                T = len(cluster_info.keys())
+
+        converted_label = copy.deepcopy(optimal_label)
+        for value in cluster_nodes:
+            for node in cluster_nodes[value]:
+                converted_label[node] = value
+        
+        return converted_label
+
+    def adaptive_rounding(self, converted_label, m, edge):
         """         
             Converts an optimal solution for the LP problem into a feasible solution whose values are only 0's ans 1's.
 
@@ -54,7 +81,7 @@ class iFlipper:
                 rounded_label: Feasible binary integer solution
         """
 
-        rounded_label = copy.deepcopy(opt_solution)
+        rounded_label = copy.deepcopy(converted_label)
         unique_values = np.unique(rounded_label)
         idx = (unique_values >= 1e-7) & (unique_values <= 1-1e-7)
 
