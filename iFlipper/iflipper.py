@@ -37,43 +37,58 @@ class iFlipper:
             flipped_label = self.label
         else:
             optimal_label = MOSEK_Solver(self.label, m, self.edge)
-            converted_label = self.optimal_converting(optimal_label, self.label, self.edge)
+            converted_label = self.solution_converting(optimal_label, self.label, self.edge)
             rounded_label = self.adaptive_rounding(converted_label, m, self.edge)
             flipped_label = self.reverse_greedy(self.label, rounded_label, m, self.w_sim, self.edge)
 
         return flipped_label
-    
-    def optimal_converting(self, optimal_label, label, edge):
 
-        cluster_info, cluster_nodes, cluster_nodes_num = init_cluster(optimal_label, label, edge)
-        T = len(cluster_info.keys())
+    def solution_converting(self, optimal_label, label, edge):
+        """         
+            Converts an optimal solution for the LP problem to another optimal solution whose values are in {0, alpha, 1}.
 
-        while T > 1:
-            while True:
-                alpha = get_zero_cluster(cluster_nodes_num)
-                if alpha == 0:
-                    break
-                else:
-                    cluster_info, cluster_nodes_num, cluster_nodes = transform_with_one_cluster(alpha, cluster_info, cluster_nodes_num, cluster_nodes)
-                    T = len(cluster_info.keys())
-            if T > 1:
-                alpha, beta = get_nonzero_two_clusters(cluster_info)
-                cluster_info, cluster_nodes_num, cluster_nodes = transform_with_two_clusters(alpha, beta, cluster_info, cluster_nodes_num, cluster_nodes)    
-                T = len(cluster_info.keys())
+            Args: 
+                optimal_label: Optimal solution for the LP problem
+                label: Labels of the data
+                edge: Indices of similar pairs
+                
+            Return:
+                converted_label: Transformed optimal solution where each value is one of {0, alpha, 1}
+        """
 
         converted_label = copy.deepcopy(optimal_label)
-        for value in cluster_nodes:
-            for node in cluster_nodes[value]:
-                converted_label[node] = value
+        unique_values = np.unique(converted_label)
+        idx = (unique_values >= 1e-7) & (unique_values <= 1-1e-7)
         
+        if np.sum(idx) >= 2:
+            cluster_info, cluster_nodes, cluster_nodes_num = init_cluster(optimal_label, label, edge)
+            T = len(cluster_info.keys())
+
+            while T > 1:
+                while True:
+                    alpha = get_zero_cluster(cluster_nodes_num)
+                    if alpha == 0:
+                        break
+                    else:
+                        cluster_info, cluster_nodes_num, cluster_nodes = transform_with_one_cluster(alpha, cluster_info, cluster_nodes_num, cluster_nodes)
+                        T = len(cluster_info.keys())
+                if T > 1:
+                    alpha, beta = get_nonzero_two_clusters(cluster_info)
+                    cluster_info, cluster_nodes_num, cluster_nodes = transform_with_two_clusters(alpha, beta, cluster_info, cluster_nodes_num, cluster_nodes)    
+                    T = len(cluster_info.keys())
+
+            for value in cluster_nodes:
+                for node in cluster_nodes[value]:
+                    converted_label[node] = value
+            
         return converted_label
 
     def adaptive_rounding(self, converted_label, m, edge):
         """         
-            Converts an optimal solution for the LP problem into a feasible solution whose values are only 0's ans 1's.
+            Converts a transformed optimal solution into a feasible solution whose values are only 0's ans 1's.
 
             Args: 
-                opt_solution: Optimal solution for the LP problem where each value is one of {0, 1, alpha}
+                opt_solution: Optimal solution for the LP problem where each value is one of {0, alpha, 1}
                 m: The violations limit
                 edge: Indices of similar pairs
                 
@@ -105,7 +120,7 @@ class iFlipper:
 
     def reverse_greedy(self, original_label, rounded_label, m, w_sim, edge):
         """         
-            Repeatedly unflips labels that increase the number of violations the least.
+            Repeatedly "unflips" labels that increase the number of violations the least.
 
             Args: 
                 original_label: Original labels
