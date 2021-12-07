@@ -37,13 +37,13 @@ class iFlipper:
             flipped_label = self.label
         else:
             optimal_label = MOSEK_Solver(self.label, m, self.edge)
-            converted_label = self.solution_converting(optimal_label, self.label, self.edge)
+            converted_label = self.converting_solution(optimal_label, self.label, self.edge)
             rounded_label = self.adaptive_rounding(converted_label, m, self.edge)
             flipped_label = self.reverse_greedy(self.label, rounded_label, m, self.w_sim, self.edge)
 
         return flipped_label
 
-    def solution_converting(self, optimal_label, label, edge):
+    def converting_solution(self, optimal_label, label, edge):
         """         
             Converts an optimal solution for the LP problem to another optimal solution whose values are in {0, alpha, 1}.
 
