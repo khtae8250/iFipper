@@ -8,7 +8,7 @@ import copy
 
 def init_cluster(optimal_label, label, edge):
     """         
-        Initializes cluster information
+        Initializes cluster information.
 
         Args: 
             optimal_label: Optimal solution for the LP problem
