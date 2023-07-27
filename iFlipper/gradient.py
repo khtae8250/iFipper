@@ -10,7 +10,10 @@ from torch.nn.functional import relu
 from torch import nn
 import torch.optim as optim
 from torch.distributions.relaxed_bernoulli import RelaxedBernoulli
-from utils import measure_error
+try:
+    from .utils import measure_error
+except:
+    from utils import measure_error
 
 def Gradient(label, m, edge, w_edge, lam_high):
     """         
@@ -27,8 +30,7 @@ def Gradient(label, m, edge, w_edge, lam_high):
         Return:
             flipped_label: Flipped labels for a given m
     """
-
-    device = torch.device("cuda:0")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     n_optim_steps, learning_rate = 1000, 0.1
     lam_high, lam_low, temp = lam_high, 0, 0.1
 

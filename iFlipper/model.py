@@ -9,7 +9,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 
-from utils import performance_func, measure_error
+try:
+    from .utils import performance_func, measure_error
+except:
+    from utils import performance_func, measure_error
 
 class Model:
         def __init__(self, model_type, x_train, y_train, edge_train, w_edge_train, x_test, y_test, edge_test, w_edge_test, x_val, y_val):

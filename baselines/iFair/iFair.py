@@ -24,8 +24,14 @@ __author__: Preethi Lahoti
 __email__: plahoti@mpi-inf.mpg.de
 """
 import numpy as np
-from lowrank_helpers import iFair as ifair_func
-from lowrank_helpers import predict as ifair_predict
+try:
+    from .lowrank_helpers import iFair as ifair_func
+except:
+    from lowrank_helpers import iFair as ifair_func
+try:
+    from .lowrank_helpers import predict as ifair_predict
+except:
+    from lowrank_helpers import predict as ifair_predict
 import sklearn.metrics.pairwise as pairwise
 
 from scipy.optimize import minimize, fmin_l_bfgs_b

@@ -5,8 +5,11 @@ from __future__ import print_function
 import numpy as np
 import copy
 
-from utils import measure_error
-
+try:
+    from .utils import measure_error
+except:
+    from utils import measure_error
+    
 def Greedy(label, m, w_sim, edge, w_edge):
     """         
         Flips labels that reduce the total error the most.

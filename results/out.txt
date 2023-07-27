@@ -1,0 +1,5 @@
+17827 seconds to complete 4.3.1: baseline.py.
+19036 seconds to complete 4.3.2: runtime.py.
+55209 seconds to complete 4.4: solution.py.
+17965 seconds to complete 4.5: ablation.py.
+Overall task takes 110037 seconds.

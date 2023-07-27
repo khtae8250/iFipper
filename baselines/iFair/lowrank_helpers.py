@@ -113,7 +113,7 @@ def iFair(params, X, D_X_f=0, k=10, A_x=1e-4, A_z=1e-4, results=0, recompute_D_X
     iFair.iters += 1
     N, M = X.shape
     alpha = params[:M]
-    v = np.matrix(params[(2 * M) + k:]).reshape((k, M))
+    v = np.asarray(params[(2 * M) + k:]).reshape((k, M))
     distances_prototypes = dist_prototype(X, v, alpha, N, M, k)
     U_nk = compute_U_nk(distances_prototypes, N, k)
     X_hat = compute_X_hat(U_nk, v, N, M, k)
@@ -136,7 +136,7 @@ def iFair(params, X, D_X_f=0, k=10, A_x=1e-4, A_z=1e-4, results=0, recompute_D_X
 def predict(params, X, k):
     N, M = X.shape
     alpha = params[:M]
-    v = np.matrix(params[(2 * M) + k:]).reshape((k, M))
+    v = np.asarray(params[(2 * M) + k:]).reshape((k, M))
     distances_prototypes = dist_prototype(X, v, alpha, N, M, k)
     U_nk = compute_U_nk(distances_prototypes, N, k)
     X_hat = compute_X_hat(U_nk, v, N, M, k)

@@ -5,12 +5,21 @@ from __future__ import print_function
 import numpy as np
 import copy
 
-from utils import measure_error
-from mosek_solver import MOSEK_Solver
-from iflipper_utils import init_cluster, get_zero_cluster, get_nonzero_two_clusters, transform_with_one_cluster, transform_with_two_clusters
+try:
+    from .utils import measure_error
+except:
+    from utils import measure_error
+try:
+    from .mosek_solver import MOSEK_Solver
+except:
+    from mosek_solver import MOSEK_Solver
+try:
+    from .iflipper_utils import init_cluster, get_zero_cluster, get_nonzero_two_clusters, transform_with_one_cluster, transform_with_two_clusters
+except:
+    from iflipper_utils import init_cluster, get_zero_cluster, get_nonzero_two_clusters, transform_with_one_cluster, transform_with_two_clusters
 
 class iFlipper:
-    def __init__(self, label, w_sim, edge, w_edge):
+    def __init__(self, label, w_sim, edge, w_edge, ablation_option = None):
         """         
             Args: 
                 label: Labels of the data
@@ -23,6 +32,7 @@ class iFlipper:
         self.w_sim = w_sim
         self.edge = edge
         self.w_edge = w_edge
+        self.ablation_option = ablation_option
 
     def transform(self, m):
         """         
@@ -32,18 +42,30 @@ class iFlipper:
                 m: The total error limit
                 
             Return:
-                flipped_label: Flipped labels for a given m
+                target_label: Flipped labels for a given m
         """
 
         if measure_error(self.label, self.edge, self.w_edge) == m:
-            flipped_label = self.label
-        else:
+            target_label = self.label
+        elif self.ablation_option == None or self.ablation_option == "iFlipper":
             optimal_label = MOSEK_Solver(self.label, m, self.w_sim, self.edge)
             converted_label = self.converting_solution(optimal_label, self.label, self.w_sim, self.edge)
             rounded_label = self.adaptive_rounding(converted_label, m, self.w_sim, self.edge)
             flipped_label = self.reverse_greedy(self.label, rounded_label, m, self.w_sim, self.edge, self.w_edge)
+            target_label = flipped_label
 
-        return flipped_label
+        elif self.ablation_option == "LP-SR":
+            optimal_label = MOSEK_Solver(self.label, m, self.w_sim, self.edge)
+            converted_label = self.converting_solution(optimal_label, self.label, self.w_sim, self.edge)
+            target_label = np.round(converted_label)
+
+        elif self.ablation_option == "LP-AR":
+            optimal_label = MOSEK_Solver(self.label, m, self.w_sim, self.edge)
+            converted_label = self.converting_solution(optimal_label, self.label, self.w_sim, self.edge)
+            rounded_label = self.adaptive_rounding(converted_label, m, self.w_sim, self.edge)
+            target_label = rounded_label
+
+        return target_label
 
     def converting_solution(self, optimal_label, label, w_sim, edge):
         """         

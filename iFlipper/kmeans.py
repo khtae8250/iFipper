@@ -6,8 +6,11 @@ import numpy as np
 import copy
 
 from sklearn.cluster import KMeans 
-from utils import measure_error
-
+try:
+    from .utils import measure_error
+except:
+    from utils import measure_error
+    
 def kMeans(data, label, m, edge, w_edge):
     """         
         Applies k-means clustering and, for each cluster, make its examples have the majority label.
