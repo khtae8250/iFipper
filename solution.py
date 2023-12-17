@@ -51,30 +51,6 @@ def main():
 
     # ["Greedy", "Gradient", "kMeans", "iFlipper", "ILP"]
 
-    if "iFlipper" in opt.methods:
-        method = "iFlipper"
-        print(f"\n###### {method} begin")
-        total_error_arr[method], num_flips_arr[method], runtime[method] = [], [], []
-        for m in m_list:
-            start = time.time()
-            IFLIP = iFlipper(y_train, w_train, edge_train, w_edge_train)
-            flipped_label = IFLIP.transform(m)
-            elapsed_time = time.time() - start
-
-            total_error = measure_error(flipped_label, edge_train, w_edge_train)
-            num_flips = np.sum(y_train != flipped_label)
-
-            total_error_arr[method].append(total_error)
-            num_flips_arr[method].append(num_flips)
-            runtime[method].append(elapsed_time)
-
-            if opt.verbose:
-                print("============================")
-                print(f"Total error limit: {m:.1f}")
-                print(f"Total error: {total_error:.1f}")
-                print(f"Number of flips: {num_flips}")
-                print(f"Runtime (sec): {elapsed_time:.5f}")
-
     # Greedy algorithm
     ## Flips labels that reduce the total error the most.
     if "Greedy" in opt.methods:
@@ -100,6 +76,7 @@ def main():
                 print(f"Total error: {total_error:.1f}")
                 print(f"Number of flips: {num_flips}")
                 print(f"Runtime (sec): {elapsed_time:.5f}")
+
 
     # Gradient-based algorithm
     ## Solves an unconstrained optimization problem via gradient descent
@@ -127,6 +104,7 @@ def main():
                 print(f"Number of flips: {num_flips}")
                 print(f"Runtime (sec): {elapsed_time:.5f}")
 
+
     # kMeans-based algorithm
     ## Applies k-means clustering and, for each cluster, make its examples have the majority label.
     if "kMeans" in opt.methods:
@@ -152,6 +130,32 @@ def main():
                 print(f"Total error: {total_error:.1f}")
                 print(f"Number of flips: {num_flips}")
                 print(f"Runtime (sec): {elapsed_time:.5f}")
+
+
+    if "iFlipper" in opt.methods:
+        method = "iFlipper"
+        print(f"\n###### {method} begin")
+        total_error_arr[method], num_flips_arr[method], runtime[method] = [], [], []
+        for m in m_list:
+            start = time.time()
+            IFLIP = iFlipper(y_train, w_train, edge_train, w_edge_train)
+            flipped_label = IFLIP.transform(m)
+            elapsed_time = time.time() - start
+
+            total_error = measure_error(flipped_label, edge_train, w_edge_train)
+            num_flips = np.sum(y_train != flipped_label)
+
+            total_error_arr[method].append(total_error)
+            num_flips_arr[method].append(num_flips)
+            runtime[method].append(elapsed_time)
+
+            if opt.verbose:
+                print("============================")
+                print(f"Total error limit: {m:.1f}")
+                print(f"Total error: {total_error:.1f}")
+                print(f"Number of flips: {num_flips}")
+                print(f"Runtime (sec): {elapsed_time:.5f}")
+
 
     # ILP Solver
     ## Solves the ILP problem exactly using CPLEX, which is a state-of-the-art solver.

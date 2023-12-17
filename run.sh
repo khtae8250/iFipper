@@ -3,28 +3,28 @@
 mkdir -p results
 InitTime=$(date +%s)
 # 4.3.1: baseline.py
-# TARGET="4.3.1: baseline.py"
-# StartTime=$(date +%s)
-# for DATASET in 'COMPAS' 'AdultCensus' 'Credit'; do
-# for SIM_MAT in 'knn' 'threshold';do
-# python baseline.py --dataset $DATASET --similarity_matrix $SIM_MAT --verbose
-# done
-# done
-# EndTime=$(date +%s)
-# echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." > /dev/stdout
-# echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." >> ./results/out.txt
+TARGET="4.3.1: baseline.py"
+StartTime=$(date +%s)
+for DATASET in 'COMPAS' 'AdultCensus' 'Credit'; do
+for SIM_MAT in 'knn' 'threshold';do
+python baseline.py --dataset $DATASET --similarity_matrix $SIM_MAT --verbose
+done
+done
+EndTime=$(date +%s)
+echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." > /dev/stdout
+echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." >> ./results/out.txt
 
-# # 4.3.2: runtime.py
-# TARGET="4.3.2: runtime.py"
-# StartTime=$(date +%s)
-# for DATASET in 'Synthetic'; do
-# for SIM_MAT in 'knn';do
-# python runtime.py --dataset $DATASET --similarity_matrix $SIM_MAT --verbose
-# done
-# done
-# EndTime=$(date +%s)
-# echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." > /dev/stdout
-# echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." >> ./results/out.txt
+# 4.3.2: runtime.py
+TARGET="4.3.2: runtime.py"
+StartTime=$(date +%s)
+for DATASET in 'Synthetic'; do
+for SIM_MAT in 'knn';do
+python runtime.py --dataset $DATASET --similarity_matrix $SIM_MAT --verbose
+done
+done
+EndTime=$(date +%s)
+echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." > /dev/stdout
+echo "$(($EndTime - $StartTime)) seconds to complete $TARGET." >> ./results/out.txt
 
 # 4.4: solution.py
 TARGET="4.4: solution.py"

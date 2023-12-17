@@ -174,7 +174,13 @@ def plot_result(opt, m_list, performance_arr, y_axis, num_digits, target = "_", 
 
     rts = list()
     color_list = ["pink", "lightblue", "thistle", "darkgray", "wheat"]
-    hatch_list = ['//', '\\', '/', 'X', '.']
+    hatch_list = ['//', '\\', '/', 'X', '']
+    ablation_color_dict = {1:0, 0:1, 3:2, 4:3, 2:4}
+    ablation_hatch_dict = {2:0, 1:1, 3:2, 4:3, 0:4}
+    if target=="ablation":
+        color_list = sorted(color_list, key=lambda x:ablation_color_dict[color_list.index(x)])
+        hatch_list = sorted(hatch_list, key=lambda x:ablation_hatch_dict[hatch_list.index(x)])
+
     for i, e in enumerate(performance_arr):
         rts.append(ax.barh(x + width * (2 - i), np.round(plot[i], num_digits), width, label=e, color=color_list[i], hatch=hatch_list[i],edgecolor="black", linewidth=2))
 
@@ -185,14 +191,25 @@ def plot_result(opt, m_list, performance_arr, y_axis, num_digits, target = "_", 
 
     ax.set_yticks(x)
     ax.set_yticklabels(labels)
-    ax.set_xscale('log')
-    plt.legend(prop={'size':30}, bbox_to_anchor=(-0.025, 1), loc="lower left", ncol=5)
-    
     max_val, max_ratio = 0, 1.06
     left, right = plt.xlim()
-    xmax = 10**(np.ceil(np.log10(right)*1.05))
-    xmax = 10**(np.log10(right)*1.10)
+    # xmax = 10**(np.ceil(np.log10(right)*1.05))
+    xmax = 10**(np.log10(right)*1.20)
     plt.xlim([1.0, xmax])
+
+    # ax.set_xscale('log')
+    # plt.legend(prop={'size':30}, bbox_to_anchor=(-0.025, 1), loc="lower left", ncol=5)
+    # plt.legend(prop={'size':30}, loc="upper right", ncol=1)
+    if target=="ablation":
+        ax.set_xscale('log')
+        if y_axis == "Total Error":
+            plt.legend(prop={'size':30}, loc="lower right", ncol=1)
+    elif target=="solution":
+        ax.set_xscale('log')
+        if y_axis == "# Flips":
+            plt.legend(prop={'size':30}, loc="upper right", ncol=1)
+            xmax = 10**(np.log10(right)+1.8)
+            plt.xlim([1.0, xmax])
         
     def autolabel(rects):
         """Attach a text label above each bar in *rects*, displaying its height."""
