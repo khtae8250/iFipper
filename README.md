@@ -62,6 +62,12 @@ Solving Integer Linear Programming (ILP) problems to find optimal solutions with
 ### Loading pre-trained model
 Additionally, the baselines of the paper ([1], [2]) require a significant amount of time for comparison with iFlipper. To address this, we have saved the trained model in the ```baselines/``` directory. You have the flexibility to either utilize the pre-trained model or train it yourself by making modifications to the options ```--load_LFR``` or ```--load_iFair``` as needed.
 
+### Possible errors
+To resolve the error message "Could not load the Qt platform plugin 'xcb'" on Linux, you can rectify it by updating the system's packages and installing the necessary dependencies. 
+```python
+sudo apt-get update
+sudo apt-get install -y qt5-default libxcb-xinerama0-dev libxcb-xinerama0 libxkbcommon-x11-0
+```
 
 ## References
 
